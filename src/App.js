@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React,{useEffect, useState} from 'react'
+import ShowList from './ShowList';
+import './App.css'
 
-function App() {
+
+const App = () => {
+
+  const [show, setShow] = useState([]);
+
+   const getData = async () => {
+    await fetch("http://api.tvmaze.com/search/shows?q=all")
+      .then((resp) => resp.json())
+      .then((res) => {
+        setShow(res);
+      });
+  };
+ 
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+    <h3 className='heading'>Shows List</h3>
+    <div className="show-container">
+    {
+      show.map((data)=>{
+        return(
+          <ShowList key={data.show.id} {...data}/>       
+           );
+       
+      })
+    }
+    </div> 
+    
+    
+   
+    
+    </>
+  )
 }
 
-export default App;
+export default App
